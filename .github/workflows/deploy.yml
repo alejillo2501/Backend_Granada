@@ -1,0 +1,56 @@
+name: Deploy Laravel to EC2
+
+on:
+  push:
+    branches:
+      - main  # Se ejecuta cuando hay cambios en main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v3
+
+    - name: Configurar PHP y Composer
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'  # Ajusta según tu versión
+        tools: composer, npm
+
+    - name: Instalar dependencias
+      run: composer install --no-dev --prefer-dist
+
+    - name: Configurar permisos
+      run: chmod -R 777 storage bootstrap/cache
+
+    - name: Crear artefacto de despliegue
+      run: tar -czf app.tar.gz . 
+
+    - name: Copiar archivos a EC2
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.AWS_HOST }}
+        username: ${{ secrets.AWS_USER }}
+        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+        source: "app.tar.gz"
+        target: "/home/ec2-user/granada_prueba"
+
+    - name: Desplegar en EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.AWS_HOST }}
+        username: ${{ secrets.AWS_USER }}
+        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
+        script: |
+          cd /home/ec2-user/granada_prueba
+          tar -xzf app.tar.gz
+          rm app.tar.gz
+          composer install --no-dev --prefer-dist
+          php artisan migrate --force
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan queue:restart
+          sudo systemctl restart nginx  # O apache2 si usas Apache
+
