@@ -1,0 +1,37 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Granada Prueba",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000"
+        }
+    ],
+    "paths": {
+        "/token": {
+            "get": {
+                "tags": [
+                    "Token"
+                ],
+                "summary": "Ver token",
+                "operationId": "25a6e3e24be121fe5b2a630bc0b12dd2",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Token",
+            "description": "Token"
+        }
+    ]
+}
