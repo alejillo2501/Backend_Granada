@@ -6,7 +6,7 @@ use App\Http\Controllers\LogsController;
 use App\Http\Controllers\PaisesController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('voyager');
 });
 
 Route::get('/token', [TokenController::class, 'index']);
