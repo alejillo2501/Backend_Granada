@@ -3,7 +3,7 @@ name: Deploy Laravel to EC2
 on:
   push:
     branches:
-      - main  # Se ejecuta cuando hay cambios en main
+      - main  # Se ejecuta cuando haces push a main
 
 jobs:
   deploy:
@@ -16,14 +16,13 @@ jobs:
     - name: Configurar PHP y Composer
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.4'  # Ajusta según tu versión
-        tools: composer, npm
+        php-version: '8.1'  # Ajusta según tu versión
+        tools: composer
 
-    - name: Instalar dependencias
-      run: composer install --no-dev --prefer-dist
-
-    - name: Configurar permisos
-      run: chmod -R 777 storage bootstrap/cache
+    - name: Instalar dependencias Laravel
+      run: |
+        composer install --no-dev --prefer-dist
+        chmod -R 777 storage bootstrap/cache
 
     - name: Crear artefacto ZIP
       run: zip -r laravel_app.zip . -x "*.git*" "vendor/*"
@@ -69,4 +68,3 @@ jobs:
           php artisan cache:clear
           php artisan queue:restart
           sudo systemctl restart nginx
-
