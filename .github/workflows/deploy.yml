@@ -35,7 +35,7 @@ jobs:
         username: ${{ secrets.AWS_USER }}
         key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
         source: "app.tar.gz"
-        target: "/home/ec2-user/granada_prueba"
+        target: "/var/www/granada_prueba"
 
     - name: Desplegar en EC2
       uses: appleboy/ssh-action@master
@@ -44,7 +44,7 @@ jobs:
         username: ${{ secrets.AWS_USER }}
         key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
         script: |
-          cd /home/ec2-user/granada_prueba
+          cd /var/www/granada_prueba
           tar -xzf app.tar.gz
           rm app.tar.gz
           composer install --no-dev --prefer-dist
