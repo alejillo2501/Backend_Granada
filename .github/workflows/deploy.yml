@@ -16,7 +16,7 @@ jobs:
     - name: Configurar PHP y Composer
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.1'  # Ajusta según tu versión
+        php-version: '8.4'  # Ajusta según tu versión
         tools: composer
 
     - name: Instalar dependencias Laravel
