@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout del código
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Configurar PHP y Composer
       uses: shivammathur/setup-php@v2
@@ -25,28 +25,32 @@ jobs:
     - name: Configurar permisos
       run: chmod -R 777 storage bootstrap/cache
 
-    - name: Crear artefacto de despliegue
-      #run: tar -czf app.tar.gz . 
-      run: echo hello > world.txt
-      
-    - uses: actions/upload-artifact@v4
-      with:
-        name: my-artifact
-        path: world.txt
+    - name: Crear artefacto ZIP
+      run: zip -r laravel_app.zip . -x "*.git*" "vendor/*"
 
-    - uses: actions/download-artifact@v4
+    - name: Subir artefacto ZIP como build
+      uses: actions/upload-artifact@v3
       with:
-        name: my-artifact
-        path: distfiles
+        name: laravel_artifact
+        path: laravel_app.zip
 
-    - name: Copiar archivos a EC2
-      uses: appleboy/scp-action@v0.1.7
+  transfer:
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Descargar artefacto
+      uses: actions/download-artifact@v3
+      with:
+        name: laravel_artifact
+
+    - name: Subir ZIP a EC2
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.AWS_HOST }}
         username: ${{ secrets.AWS_USER }}
         key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
-        port: ${{ secrets.PORT }}
-        source: distfiles/*
+        source: "laravel_app.zip"
         target: "/var/www/granada_prueba"
 
     - name: Desplegar en EC2
@@ -54,10 +58,11 @@ jobs:
       with:
         host: ${{ secrets.AWS_HOST }}
         username: ${{ secrets.AWS_USER }}
-        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}        
+        key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
         script: |
           cd /var/www/granada_prueba
-          echo hello > world.txt
+          unzip -o laravel_app.zip
+          rm laravel_app.zip
           composer install --no-dev --prefer-dist
           php artisan migrate --force
           php artisan config:clear
