@@ -37,4 +37,8 @@ class LogsServicesProvider extends ServiceProvider
         $log->countries_details = $data->countries_details;
         $log->save();        
     }
+
+    public function consultarLogs(){
+        return Logs::all();
+    }
 }
