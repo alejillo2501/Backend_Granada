@@ -41,4 +41,21 @@ class LogsServicesProvider extends ServiceProvider
     public function consultarLogs(){
         return Logs::all();
     }
+
+    public function actualizaLog($data){
+        $data = (object) $data;
+
+        $log = Logs::find($data->id);
+        $log->username = $data->username;
+        $log->save;
+
+        return $log;
+    }
+
+    public function eliminaLog($data){
+        $data = (object) $data;
+
+        Logs::find($data->id)->delete();
+        return Logs::all();
+    }
 }

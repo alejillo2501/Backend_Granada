@@ -77,14 +77,18 @@ return [
             'query' => [
                 // ExampleQuery::class,
                 'countries' => App\GraphQL\Queries\CountriesQuery::class,             
+                'logs' => App\GraphQL\Queries\LogsQuery::class,             
             ],
             'mutation' => [
                 // ExampleMutation::class,
+                'updateLog' => App\GraphQL\Mutations\UpdateLogMutation::class,
+                'deleteLog' => App\GraphQL\Mutations\DeleteLogMutation::class,
             ],
             // The types only available in this schema
             'types' => [
                 // ExampleType::class,
                 'Country' => App\GraphQL\Types\CountryType::class,
+                'Log' => App\GraphQL\Types\LogType::class,
             ],
 
             // Laravel HTTP middleware

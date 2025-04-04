@@ -9,10 +9,95 @@
             "url": "http://localhost:8000"
         },
         {
-            "url": "https://granadaback.alejolondono.com"
+            "url": "http://ec2-3-148-210-237.us-east-2.compute.amazonaws.com"
         }
     ],
     "paths": {
+        "/graphql": {
+            "post": {
+                "tags": [
+                    "GraphQL"
+                ],
+                "summary": "Ejecutar consulta GraphQL de países",
+                "operationId": "ad8dcaf3d4665e9cc7382789b916a351",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "query"
+                                ],
+                                "properties": {
+                                    "query": {
+                                        "type": "string",
+                                        "example": "query Countries { countries(limit: 9, username: string) { name capital region population flag area densidad } }"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa con lista de países",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "countries": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Argentina"
+                                                            },
+                                                            "capital": {
+                                                                "type": "string",
+                                                                "example": "Buenos Aires"
+                                                            },
+                                                            "region": {
+                                                                "type": "string",
+                                                                "example": "South America"
+                                                            },
+                                                            "population": {
+                                                                "type": "integer",
+                                                                "example": 45000000
+                                                            },
+                                                            "flag": {
+                                                                "type": "string",
+                                                                "example": "🇦🇷"
+                                                            },
+                                                            "area": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 2780400
+                                                            },
+                                                            "densidad": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 16.2
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/token": {
             "get": {
                 "tags": [
@@ -32,6 +117,10 @@
         }
     },
     "tags": [
+        {
+            "name": "GraphQL",
+            "description": "GraphQL"
+        },
         {
             "name": "Token",
             "description": "Token"

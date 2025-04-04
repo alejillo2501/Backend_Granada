@@ -2,17 +2,16 @@
 
 namespace App\GraphQL\Queries;
 
-use Illuminate\Support\Facades\Http;
 use GraphQL\Type\Definition\Type;
 use Rebing\GraphQL\Support\Facades\GraphQL;
 use Rebing\GraphQL\Support\Query;
-use App\Providers\AppServiceProvider;
-use App\Providers\LogsServicesProvider;
+use App\Providers\PaisesServicesProvider;
 
 class CountriesQuery extends Query
 {
     protected $attributes = [
-        'name' => 'countries'
+        'name' => 'countries',
+        'description' => 'Trae una lista de paises'
     ];
 
     public function type(): Type
@@ -34,44 +33,49 @@ class CountriesQuery extends Query
         ];
     }
 
-
+ /**
+ * @OA\Post(
+ *     path="/graphql",
+ *     summary="Ejecutar consulta GraphQL de países",
+ *     tags={"GraphQL"},
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             required={"query"},
+ *             @OA\Property(
+ *                 property="query",
+ *                 type="string",
+ *                 example="query Countries { countries(limit: 9, username: string) { name capital region population flag area densidad } }"
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Respuesta exitosa con lista de países",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="data", type="object",
+ *                 @OA\Property(property="countries", type="array", @OA\Items(
+ *                     @OA\Property(property="name", type="string", example="Argentina"),
+ *                     @OA\Property(property="capital", type="string", example="Buenos Aires"),
+ *                     @OA\Property(property="region", type="string", example="South America"),
+ *                     @OA\Property(property="population", type="integer", example=45000000),
+ *                     @OA\Property(property="flag", type="string", example="🇦🇷"),
+ *                     @OA\Property(property="area", type="number", format="float", example=2780400),
+ *                     @OA\Property(property="densidad", type="number", format="float", example=16.2)
+ *                 ))
+ *             )
+ *         )
+ *     )
+ * )
+ */
     public function resolve($root, $args)
     {   
         $limit = $args['limit'] ?? 10;
         $username = $args['username'] ?? "default";
-
-        $data = Http::get('https://www.apicountries.com/countries');  
-        //$data = Http::get('https://restcountries.com/v3.1/all'); 
-        $data = $data->json();
+        $paises = new PaisesServicesProvider();
         
-
-        $response = $this->addDensidad($data);
-
-        $order = new AppServiceProvider();
-        $log = new LogsServicesProvider();
-        $response = $order->array_sort($response, 'densidad', SORT_DESC);
-        $response = array_slice($response, 0, $limit);
-
-        $logData = [
-            'username' => $username,
-            'request_timestamp' => date("Y-m-d H:i:s"),
-            'num_countries_returned' => $limit,
-            'countries_details' => json_encode($response)
-        ];
-
-        $log->crearLog($logData);
-        
-        return $response;
+        return $paises->consultarPaises($limit, $username);
     }
 
-    private function addDensidad($data){
-        foreach ($data as &$fila) {            
-            if (!array_key_exists('area', $fila)) {
-                $fila['densidad'] = 0;
-            }else{
-                $fila['densidad'] = $fila['population'] / $fila['area'];
-            }
-        }
-        return $data;
-    }
+    
 }
