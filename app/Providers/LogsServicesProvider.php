@@ -42,6 +42,21 @@ class LogsServicesProvider extends ServiceProvider
         return Logs::all();
     }
 
+    public function consultarLogsFilterDate($data){
+        $data = (object) $data;
+        $from = date($data->from);
+        $to = date($data->to);
+
+        if($from == $to){
+            return Logs::where('request_timestamp', 'like', $from.'%')->get();
+        }
+
+        $to = strtotime('+1 day', strtotime($to));
+        $to = date('yyyy-mm-dd', $to);        
+
+        return Logs::whereBetween('request_timestamp', [$from, $to])->get();
+    }
+
     public function actualizaLog($data){
         $data = (object) $data;
 
