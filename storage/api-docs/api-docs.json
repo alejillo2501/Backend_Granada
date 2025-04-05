@@ -31,7 +31,7 @@
                                 "properties": {
                                     "query": {
                                         "type": "string",
-                                        "example": "query Countries { countries(limit: 9, username: string) { name capital region population flag area densidad } }"
+                                        "example": "query Countries { countries(limit: 9, username: string) { name population area densidad } }"
                                     }
                                 },
                                 "type": "object"
@@ -56,21 +56,9 @@
                                                                 "type": "string",
                                                                 "example": "Argentina"
                                                             },
-                                                            "capital": {
-                                                                "type": "string",
-                                                                "example": "Buenos Aires"
-                                                            },
-                                                            "region": {
-                                                                "type": "string",
-                                                                "example": "South America"
-                                                            },
                                                             "population": {
                                                                 "type": "integer",
                                                                 "example": 45000000
-                                                            },
-                                                            "flag": {
-                                                                "type": "string",
-                                                                "example": "🇦🇷"
                                                             },
                                                             "area": {
                                                                 "type": "number",
@@ -81,6 +69,81 @@
                                                                 "type": "number",
                                                                 "format": "float",
                                                                 "example": 16.2
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/graphql/": {
+            "post": {
+                "tags": [
+                    "Logs"
+                ],
+                "summary": "Ejecutar consulta GraphQL de logs",
+                "operationId": "0f7344a7a03574424c0fdb9562e1ebb7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "query"
+                                ],
+                                "properties": {
+                                    "query": {
+                                        "type": "string",
+                                        "example": "query Logs { logs(limit: 9,) { id name capital region population flag area densidad } }"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Respuesta exitosa con lista de logs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "logs": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": "2"
+                                                            },
+                                                            "username": {
+                                                                "type": "string",
+                                                                "example": "Alejolondono"
+                                                            },
+                                                            "request_timestamp": {
+                                                                "type": "string",
+                                                                "example": "2025-04-03 21:01:08"
+                                                            },
+                                                            "num_countries_returned": {
+                                                                "type": "integer",
+                                                                "example": "7"
+                                                            },
+                                                            "countries_details": {
+                                                                "type": "string",
+                                                                "example": "example"
                                                             }
                                                         },
                                                         "type": "object"
@@ -120,6 +183,10 @@
         {
             "name": "GraphQL",
             "description": "GraphQL"
+        },
+        {
+            "name": "Logs",
+            "description": "Logs"
         },
         {
             "name": "Token",

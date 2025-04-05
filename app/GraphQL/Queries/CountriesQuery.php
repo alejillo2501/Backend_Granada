@@ -45,7 +45,7 @@ class CountriesQuery extends Query
  *             @OA\Property(
  *                 property="query",
  *                 type="string",
- *                 example="query Countries { countries(limit: 9, username: string) { name capital region population flag area densidad } }"
+ *                 example="query Countries { countries(limit: 9, username: string) { name population area densidad } }"
  *             )
  *         )
  *     ),
@@ -55,11 +55,8 @@ class CountriesQuery extends Query
  *         @OA\JsonContent(
  *             @OA\Property(property="data", type="object",
  *                 @OA\Property(property="countries", type="array", @OA\Items(
- *                     @OA\Property(property="name", type="string", example="Argentina"),
- *                     @OA\Property(property="capital", type="string", example="Buenos Aires"),
- *                     @OA\Property(property="region", type="string", example="South America"),
- *                     @OA\Property(property="population", type="integer", example=45000000),
- *                     @OA\Property(property="flag", type="string", example="🇦🇷"),
+ *                     @OA\Property(property="name", type="string", example="Argentina"), 
+ *                     @OA\Property(property="population", type="integer", example=45000000), 
  *                     @OA\Property(property="area", type="number", format="float", example=2780400),
  *                     @OA\Property(property="densidad", type="number", format="float", example=16.2)
  *                 ))

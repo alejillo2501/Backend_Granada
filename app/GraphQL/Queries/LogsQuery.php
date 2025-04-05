@@ -38,9 +38,9 @@ class LogsQuery extends Query
 
  /**
  * @OA\Post(
- *     path="/graphql",
+ *     path="/graphql/",
  *     summary="Ejecutar consulta GraphQL de logs",
- *     tags={"GraphQL"},
+ *     tags={"Logs"},
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
@@ -48,7 +48,7 @@ class LogsQuery extends Query
  *             @OA\Property(
  *                 property="query",
  *                 type="string",
- *                 example="query Logs { logs(limit: 9,) { name capital region population flag area densidad } }"
+ *                 example="query Logs { logs(limit: 9,) { id name capital region population flag area densidad } }"
  *             )
  *         )
  *     ),
@@ -57,11 +57,12 @@ class LogsQuery extends Query
  *         description="Respuesta exitosa con lista de logs",
  *         @OA\JsonContent(
  *             @OA\Property(property="data", type="object",
- *                 @OA\Property(property="countries", type="array", @OA\Items(
+ *                 @OA\Property(property="logs", type="array", @OA\Items(
+ * *                   @OA\Property(property="id", type="integer", example="2"),
  *                     @OA\Property(property="username", type="string", example="Alejolondono"),
  *                     @OA\Property(property="request_timestamp", type="string", example="2025-04-03 21:01:08"),
- *                     @OA\Property(property="num_countries_returned", type="int", example="7"),
- *                     @OA\Property(property="countries_details", type="integer", example=[{\"name\":\"Macao\",\"topLevelDomain\":[\".mo\"],\"alpha2Code\":\"MO\"])
+ *                     @OA\Property(property="num_countries_returned", type="integer", example="7"),
+ *                     @OA\Property(property="countries_details", type="string", example="example")
  *                 ))
  *             )
  *         )
