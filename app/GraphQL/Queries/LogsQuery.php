@@ -16,6 +16,20 @@ class LogsQuery extends Query
         'description' => 'Trae una lista de losg'
     ];
 
+    public function args(): array
+    {
+        return [
+            'from' => [
+                'type' => Type::string(),
+                'description' => 'Fecha de inicio logs'
+            ],
+            'to' => [
+                'type' => Type::string(),
+                'description' => 'Fecha de fin logs'
+            ]         
+        ];
+    }
+
     public function type(): Type
     {
         return Type::listOf(GraphQL::type('Log'));
@@ -56,8 +70,14 @@ class LogsQuery extends Query
  */
     public function resolve($root, $args)
     {           
-        $log = new LogsServicesProvider();                
-        return $log->consultarLogs();
+        $log = new LogsServicesProvider();
+        
+        if (array_key_exists("from",$args) && array_key_exists("to",$args)){
+            return $log->consultarLogsFilterDate($args);
+        }else{
+            return $log->consultarLogs();
+        }
+        
     }
     
 }
