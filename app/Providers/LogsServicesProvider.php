@@ -39,7 +39,7 @@ class LogsServicesProvider extends ServiceProvider
     }
 
     public function consultarLogs(){
-        return Logs::all();
+        return Logs::orderBy('id', 'DESC')->get();
     }
 
     public function consultarLogsFilterDate($data){
@@ -48,13 +48,17 @@ class LogsServicesProvider extends ServiceProvider
         $to = date($data->to);
 
         if($from == $to){
-            return Logs::where('request_timestamp', 'like', $from.'%')->get();
+            return Logs::where('request_timestamp', 'like', $from.'%')
+            ->orderBy('id', 'DESC')
+            ->get();
         }
 
         $to = strtotime('+1 day', strtotime($to));
         $to = date('yyyy-mm-dd', $to);        
 
-        return Logs::whereBetween('request_timestamp', [$from, $to])->get();
+        return Logs::whereBetween('request_timestamp', [$from, $to])
+            ->orderBy('id', 'DESC')
+            ->get();
     }
 
     public function actualizaLog($data){
