@@ -14,11 +14,8 @@ class CountryType extends GraphQLType
     public function fields(): array
     {
         return [
-            'name' => ['type' => Type::string()],
-            'capital' => ['type' => Type::string()],
-            'region' => ['type' => Type::string()],
-            'population' => ['type' => Type::int()],
-            'flag' => ['type' => Type::string()],
+            'name' => ['type' => Type::string()],           
+            'population' => ['type' => Type::int()],            
             'area' => ['type' => Type::float()],            
             'densidad' => ['type' => Type::float()],            
         ];

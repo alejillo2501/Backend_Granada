@@ -54,13 +54,26 @@ class PaisesServicesProvider extends ServiceProvider
     }
 
     private function addDensidad($data){
-        foreach ($data as &$fila) {            
-            if (!array_key_exists('area', $fila)) {
-                $fila['densidad'] = 0;
-            }else{
-                $fila['densidad'] = $fila['population'] / $fila['area'];
+        $arrayData = [];
+        foreach ($data as &$fila) {   
+            $densidad = 0; 
+            $area = 0;
+
+            if (array_key_exists('area', $fila)) {
+                $densidad = $fila['population'] / $fila['area'];
+                $area = $fila['area'];
             }
+
+            $schema = array(
+                'name' => $fila['name'],
+                'population' => $fila['population'],
+                'area' => $area,
+                'densidad' => $densidad
+            );
+
+            array_push($arrayData, $schema);
+            
         }
-        return $data;
+        return $arrayData;
     }
 }

@@ -62,7 +62,7 @@ class LogsServicesProvider extends ServiceProvider
 
         $log = Logs::find($data->id);
         $log->username = $data->username;
-        $log->save;
+        $log->save();
 
         return $log;
     }
